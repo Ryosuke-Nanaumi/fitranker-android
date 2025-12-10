@@ -2,45 +2,27 @@ package com.example.fitranker
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.example.fitranker.ui.personal.view.FitRankerHomeView
 import com.example.fitranker.ui.theme.FitRankerTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        val bg = Color(0xFF07190A)
+
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(bg.toArgb()),
+            navigationBarStyle = SystemBarStyle.dark(bg.toArgb())
+        )
         setContent {
             FitRankerTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 FitRankerHomeView()
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FitRankerTheme {
-        Greeting("Android")
     }
 }
