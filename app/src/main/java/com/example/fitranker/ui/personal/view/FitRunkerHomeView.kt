@@ -1,8 +1,10 @@
 package com.example.fitranker.ui.personal.view
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -93,16 +95,101 @@ fun HomeHeader(
 
 @Composable
 fun HomeContent(modifier: Modifier = Modifier) {
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp),
-        horizontalArrangement = Arrangement.spacedBy(15.dp)
+        verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
-        PointCard(title = "今日のポイント", point = "10", modifier = Modifier.weight(1f))
-        PointCard(title = "累計ポイント", point = "100", modifier = Modifier.weight(1f))
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            PointCard(title = "今日のポイント", point = "10", modifier = Modifier.weight(1f))
+            PointCard(title = "累計ポイント", point = "100", modifier = Modifier.weight(1f))
+        }
+        Column {
+            Text(
+                text = "今日のトレーニング",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                TrainingItemCard(
+                    icon = R.drawable.icon_kintore,
+                    title = "ベンチプレス - 3 x 10回",
+                    point = 50
+                )
+                TrainingItemCard(
+                    icon = R.drawable.icon_kintore,
+                    title = "スクワット - 3 x 12回",
+                    point = 60
+                )
+                TrainingItemCard(
+                    icon = R.drawable.icon_warking,
+                    title = "ランニング - 20分",
+                    point = 40
+                )
+            }
+        }
     }
 }
+
+@Composable
+fun TrainingItemCard(@DrawableRes icon: Int, title: String, point: Int) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
+            .background(Color(0xFF132815))
+            .padding(20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            TrainingIcon(
+                iconRes = icon,
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = title,
+                color = Color.White,
+                fontSize = 20.sp
+            )
+        }
+
+        Text(
+            text = "+$point pt",
+            color = Color(0xFF38FF14),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun TrainingIcon(
+    @DrawableRes iconRes: Int,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .size(48.dp)
+            .background(Color(0xFF1E471D), shape = CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            tint = Color(0xFF38FF14),
+            modifier = Modifier.size(50.dp)
+        )
+    }
+}
+
 
 @Composable
 fun PointCard(title: String, point: String, modifier: Modifier = Modifier) {
@@ -115,7 +202,7 @@ fun PointCard(title: String, point: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .height(140.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(color = Color(0xFF1F1F1F))
+            .background(color = Color(0xFF132815))
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
