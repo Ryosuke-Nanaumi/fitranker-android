@@ -1,16 +1,20 @@
 package com.example.fitranker.ui.personal.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
@@ -44,7 +48,7 @@ fun FitRankerHomeView() {
         },
         containerColor = background,
     ) { innerPadding ->
-        Text(modifier = Modifier.padding(innerPadding), text = "foo")
+        HomeContent(modifier = Modifier.padding(innerPadding))
     }
 }
 
@@ -84,5 +88,47 @@ fun HomeHeader(
                 tint = Color.White
             )
         }
+    }
+}
+
+@Composable
+fun HomeContent(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 15.dp),
+        horizontalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
+        PointCard(title = "今日のポイント", point = "10", modifier = Modifier.weight(1f))
+        PointCard(title = "累計ポイント", point = "100", modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+fun PointCard(title: String, point: String, modifier: Modifier = Modifier) {
+    val pointColor = if (title == "今日のポイント") {
+        Color(0xFF38FF14)
+    } else {
+        Color.White
+    }
+    Column(
+        modifier = modifier
+            .height(140.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .background(color = Color(0xFF1F1F1F))
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
+        Text(
+            text = title,
+            color = Color.White,
+            fontSize = 20.sp,
+        )
+        Text(
+            text = "$point pt",
+            color = pointColor,
+            fontSize = 35.sp,
+            fontWeight = FontWeight.ExtraBold
+        )
     }
 }
