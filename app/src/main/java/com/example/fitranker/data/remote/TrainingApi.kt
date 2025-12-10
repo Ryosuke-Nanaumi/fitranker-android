@@ -1,5 +1,6 @@
 package com.example.fitranker.data.remote
 
+import com.squareup.moshi.Json
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -7,8 +8,10 @@ import retrofit2.http.Path
 
 //@JsonClass(generateAdapter = true)
 data class PersonalUserInfo(
+    @param:Json(name = "id")
     val userId: Int,
     val name: String,
+    @param:Json(name = "totalPoints")
     val totalPoint: Int,
     val todaysPoint: Int,
 )

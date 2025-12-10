@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     id("kotlin-kapt")
 }
 
@@ -70,4 +71,10 @@ dependencies {
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.9.6")
+
+    // JSON serialization library, works with the Kotlin serialization plugin.
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 }

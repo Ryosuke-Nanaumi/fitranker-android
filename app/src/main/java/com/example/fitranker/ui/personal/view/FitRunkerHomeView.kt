@@ -24,6 +24,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,10 +35,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.fitranker.R
+import com.example.fitranker.ui.navigation.Home
+import com.example.fitranker.ui.personal.viewModel.HomeUiState
+import com.example.fitranker.ui.personal.viewModel.HomeViewModel
+import kotlinx.serialization.Serializable
 
 @Composable
-fun FitRankerHomeView() {
+fun FitRankerApp(viewModel: HomeViewModel) {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = Home) {
+        composable<Home> {
+            val uiState by viewModel.uiState.collectAsState()
+            LaunchedEffect(Unit) {
+                viewModel.load(id = 1)
+            }
+            FitRankerHomeView(uiState)
+        }
+    }
+
+}
+
+@Composable
+fun FitRankerHomeView(
+    uiState: HomeUiState,
+//    onRankingClick: () -> Unit,
+//    onHistoryClick: () -> Unit,
+//    onAddTrainingClick: () -> Unit
+) {
     val background = Color(0xFF07190A)
     Scaffold(
         modifier = Modifier
@@ -50,7 +80,7 @@ fun FitRankerHomeView() {
         },
         containerColor = background,
     ) { innerPadding ->
-        HomeContent(modifier = Modifier.padding(innerPadding))
+        HomeContent(uiState = uiState, modifier = Modifier.padding(innerPadding))
     }
 }
 
@@ -94,7 +124,7 @@ fun HomeHeader(
 }
 
 @Composable
-fun HomeContent(modifier: Modifier = Modifier) {
+fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -104,8 +134,8 @@ fun HomeContent(modifier: Modifier = Modifier) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            PointCard(title = "今日のポイント", point = "10", modifier = Modifier.weight(1f))
-            PointCard(title = "累計ポイント", point = "100", modifier = Modifier.weight(1f))
+            PointCard(title = "今日のポイント", point = uiState.todaysPoint.toString(), modifier = Modifier.weight(1f))
+            PointCard(title = "累計ポイント", point = uiState.totalPoints.toString(), modifier = Modifier.weight(1f))
         }
         Column {
             Text(
