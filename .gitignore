@@ -1,0 +1,45 @@
+# =========================
+# Gradle
+# =========================
+/.gradle/
+/build/
+/app/build/
+/**/build/
+
+# Local configuration
+local.properties
+
+# Keystore files
+*.jks
+*.keystore
+
+# =========================
+# Android Studio / IntelliJ
+# =========================
+.idea/
+*.iml
+
+# Exclude only heavy/redundant IDE files
+.idea/caches/
+.idea/libraries/
+
+# Keep project code style settings
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+
+# =========================
+# Compose Compiler
+# =========================
+/**/compose-compiler-metrics/
+/**/compose-compiler-reports/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs / Generated
+# =========================
+*.log
