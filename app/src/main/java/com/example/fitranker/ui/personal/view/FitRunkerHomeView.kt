@@ -99,7 +99,7 @@ fun HomeContent(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp),
-        verticalArrangement = Arrangement.spacedBy(15.dp)
+        verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(15.dp)
@@ -113,7 +113,7 @@ fun HomeContent(modifier: Modifier = Modifier) {
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier.padding(bottom = 10.dp)
             )
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -135,6 +135,49 @@ fun HomeContent(modifier: Modifier = Modifier) {
                 )
             }
         }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            HomeButton(
+                icon = R.drawable.icon_ranking,
+                title = "ランキングを見る",
+                modifier = Modifier.weight(1f)
+            )
+            HomeButton(
+                icon = R.drawable.icon_history,
+                title = "トレーニング履歴",
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+fun PointCard(title: String, point: String, modifier: Modifier = Modifier) {
+    val pointColor = if (title == "今日のポイント") {
+        Color(0xFF38FF14)
+    } else {
+        Color.White
+    }
+    Column(
+        modifier = modifier
+            .height(140.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .background(color = Color(0xFF132815))
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
+        Text(
+            text = title,
+            color = Color.White,
+            fontSize = 20.sp,
+        )
+        Text(
+            text = "$point pt",
+            color = pointColor,
+            fontSize = 35.sp,
+            fontWeight = FontWeight.ExtraBold
+        )
     }
 }
 
@@ -171,13 +214,33 @@ fun TrainingItemCard(@DrawableRes icon: Int, title: String, point: Int) {
 }
 
 @Composable
+fun HomeButton(@DrawableRes icon: Int, title: String, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .height(140.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .background(color = Color(0xFF132815))
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TrainingIcon(iconRes = icon)
+        Text(
+            text = title,
+            color = Color.White,
+            fontSize = 16.sp,
+        )
+    }
+}
+
+@Composable
 fun TrainingIcon(
     @DrawableRes iconRes: Int,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
-            .size(48.dp)
+            .size(56.dp)
             .background(Color(0xFF1E471D), shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
@@ -185,37 +248,7 @@ fun TrainingIcon(
             painter = painterResource(id = iconRes),
             contentDescription = null,
             tint = Color(0xFF38FF14),
-            modifier = Modifier.size(50.dp)
-        )
-    }
-}
-
-
-@Composable
-fun PointCard(title: String, point: String, modifier: Modifier = Modifier) {
-    val pointColor = if (title == "今日のポイント") {
-        Color(0xFF38FF14)
-    } else {
-        Color.White
-    }
-    Column(
-        modifier = modifier
-            .height(140.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(color = Color(0xFF132815))
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(15.dp)
-    ) {
-        Text(
-            text = title,
-            color = Color.White,
-            fontSize = 20.sp,
-        )
-        Text(
-            text = "$point pt",
-            color = pointColor,
-            fontSize = 35.sp,
-            fontWeight = FontWeight.ExtraBold
+            modifier = Modifier.size(32.dp)
         )
     }
 }
