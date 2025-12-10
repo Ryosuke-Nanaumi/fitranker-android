@@ -1,4 +1,4 @@
-package com.example.fitrunker.data.remote
+package com.example.fitranker.data.remote
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

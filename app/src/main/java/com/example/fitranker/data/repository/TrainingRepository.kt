@@ -1,11 +1,11 @@
-package com.example.fitrunker.data.repository
+package com.example.fitranker.data.repository
 
-import com.example.fitrunker.data.remote.ApiClient
-import com.example.fitrunker.data.remote.PersonalUserInfo
-import com.example.fitrunker.data.remote.TrainingRecordResponse
-import com.example.fitrunker.data.remote.RankingInfo
-import com.example.fitrunker.data.remote.TrainingApi
-import com.example.fitrunker.data.remote.TrainingRecordRequest
+import com.example.fitranker.data.remote.ApiClient
+import com.example.fitranker.data.remote.PersonalUserInfo
+import com.example.fitranker.data.remote.TrainingRecordResponse
+import com.example.fitranker.data.remote.RankingInfo
+import com.example.fitranker.data.remote.TrainingApi
+import com.example.fitranker.data.remote.TrainingRecordRequest
 
 class TrainingRepository(
     private val api: TrainingApi = ApiClient.create(TrainingApi::class.java)

@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.fitrunker"
+    namespace = "com.example.fitranker"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.fitrunker"
+        applicationId = "com.example.fitranker"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

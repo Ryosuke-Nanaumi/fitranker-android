@@ -1,4 +1,4 @@
-package com.example.fitrunker
+package com.example.fitranker
 
 import org.junit.Test
 

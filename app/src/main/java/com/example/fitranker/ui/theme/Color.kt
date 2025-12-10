@@ -1,4 +1,4 @@
-package com.example.fitrunker.ui.theme
+package com.example.fitranker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
