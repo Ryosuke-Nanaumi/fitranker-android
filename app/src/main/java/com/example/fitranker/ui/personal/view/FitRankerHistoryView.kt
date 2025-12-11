@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -49,7 +50,10 @@ fun HistoryRoute(
 
     FitRankerHistoryView(
         uiState = uiState,
-        onBack = onBack
+        onBack = onBack,
+        onDeleteClick = { trainingId ->
+            viewModel.deleteTraining(trainingId)
+        }
     )
 }
 
@@ -57,6 +61,7 @@ fun HistoryRoute(
 fun FitRankerHistoryView(
     uiState: HistoryViewModel.HistoryUiState,
     onBack: () -> Unit,
+    onDeleteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -83,7 +88,7 @@ fun FitRankerHistoryView(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(uiState.records) { record ->
-                        TrainingItemHistoryCard(record)
+                        TrainingItemHistoryCard(record, onDeleteClick)
                     }
                 }
             }
@@ -125,7 +130,8 @@ fun HistoryHeader(onBack: () -> Unit) {
 
 @Composable
 fun TrainingItemHistoryCard(
-    record: HistoryViewModel.TrainingHistoryRecord
+    record: HistoryViewModel.TrainingHistoryRecord,
+    onDeleteClick: (Int) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -155,6 +161,15 @@ fun TrainingItemHistoryCard(
                     fontSize = 14.sp
                 )
             }
+
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "削除",
+                tint = Color.Red,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { onDeleteClick(record.id) }
+            )
         }
 
         Text(

@@ -27,4 +27,8 @@ class TrainingRepository @Inject constructor(
     suspend fun postTrainingRecord(input: TrainingRecordRequest): TrainingRecordResponse {
         return api.postTrainingRecord(input)
     }
+
+    suspend fun deleteTrainingRecord(id: Int) {
+        api.deleteTrainingRecord(id)
+    }
 }

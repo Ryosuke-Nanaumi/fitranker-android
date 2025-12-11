@@ -3,6 +3,7 @@ package com.example.fitranker.data.remote
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -65,4 +66,9 @@ interface TrainingApi {
     suspend fun postTrainingRecord(
         @Body body: TrainingRecordRequest
     ): TrainingRecordResponse
+
+    @DELETE("api/training-records/{id}")
+    suspend fun deleteTrainingRecord(
+        @Path("id") id: Int
+    )
 }

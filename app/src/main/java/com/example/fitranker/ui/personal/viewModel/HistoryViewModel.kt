@@ -15,7 +15,7 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     private val repository: TrainingRepository
 ) : ViewModel() {
-
+    private var uid: Int? = null
     data class HistoryUiState(
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
@@ -35,6 +35,7 @@ class HistoryViewModel @Inject constructor(
     val uiState: StateFlow<HistoryUiState> = _uiState
 
     fun load(userId: Int) {
+        uid = userId
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
@@ -68,6 +69,21 @@ class HistoryViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteTraining(trainingId: Int) {
+        if (uid == null) return
+        viewModelScope.launch {
+            try {
+                repository.deleteTrainingRecord(trainingId)
+                load(uid!!)
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(errorMessage = "削除に失敗しました: ${e.message}")
+                }
+            }
+        }
+    }
+
     private fun generateTrainingIcon(exerciseId: Int): Int {
         return Exercise.entries.find { it.id == exerciseId }?.resId ?: R.drawable.icon_kintore
     }
