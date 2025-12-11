@@ -202,7 +202,9 @@ fun TrainingInput(
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Gray,
             focusedBorderColor = Color(0xFF27F94B),
-            focusedLabelColor = Color(0xFF27F94B)
+            focusedLabelColor = Color(0xFF27F94B),
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
         )
     )
 }

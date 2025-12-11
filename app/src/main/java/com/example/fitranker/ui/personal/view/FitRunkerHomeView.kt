@@ -207,13 +207,13 @@ fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier) {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "今日のトレーニング",
+                    text = "今日のトレーニング(直近5件)",
                     color = Color.White,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 10.dp)
                 )
-                uiState.trainings.forEach { training ->
+                uiState.trainings.take(5).forEach { training ->
                     TrainingItemCard(
                         icon = training.label,
                         title = "${training.name}: ${training.amount}回",
