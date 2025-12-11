@@ -1,6 +1,5 @@
 package com.example.fitranker.ui.personal.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitranker.data.repository.TrainingRepository
@@ -8,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 
 data class TrainingUiModel(
     val name: String,
@@ -24,10 +24,26 @@ data class HomeUiState(
     val errorMessage: String? = null
 )
 
+enum class Exercise(val label: String) {
+    BENCH_PRESS("ベンチプレス"),
+    SQUAT("スクワット"),
+    RUNNING("ランニング"),
+}
+
+data class AddTrainingUiState(
+    val weight: String = "",
+    val reps: String = "",
+    val selectedExercise: Exercise = Exercise.BENCH_PRESS,
+    val date: Date = Date(),
+    val isShow: Boolean = false
+)
+
 class HomeViewModel(private val repository: TrainingRepository = TrainingRepository()) :
     ViewModel() {
     private var _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = _uiState
+    private var _addTrainingUiState = MutableStateFlow(AddTrainingUiState())
+    val addTrainingUiState: StateFlow<AddTrainingUiState> = _addTrainingUiState
 
     fun load(id: Int) {
         viewModelScope.launch {
@@ -49,6 +65,17 @@ class HomeViewModel(private val repository: TrainingRepository = TrainingReposit
                     errorMessage = "personalUserInfoの取得に失敗しました: $e"
                 )
             }
+        }
+    }
+
+    fun showTrainingSheet() {
+        _addTrainingUiState.update {
+            it.copy(isShow = true)
+        }
+    }
+    fun hideTrainingSheet() {
+        _addTrainingUiState.update {
+            it.copy(isShow = false)
         }
     }
 }

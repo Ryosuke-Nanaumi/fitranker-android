@@ -20,15 +20,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,20 +48,47 @@ import com.example.fitranker.R
 import com.example.fitranker.ui.navigation.Home
 import com.example.fitranker.ui.personal.viewModel.HomeUiState
 import com.example.fitranker.ui.personal.viewModel.HomeViewModel
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FitRankerApp(viewModel: HomeViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Home) {
         composable<Home> {
             val uiState by viewModel.uiState.collectAsState()
+            val addState by viewModel.addTrainingUiState.collectAsState()
+            val showTrainingSheetState = rememberModalBottomSheetState()
+            val scope = rememberCoroutineScope()
+
+            if (addState.isShow) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        scope.launch { showTrainingSheetState.hide() }.invokeOnCompletion{
+                            viewModel.hideTrainingSheet()
+                        }
+                    },
+                    containerColor = Color(0xFF113616),
+                    sheetState = showTrainingSheetState
+                ) {
+                    AddTrainingSheetContent()
+                }
+            }
+
             LaunchedEffect(Unit) {
                 viewModel.load(id = 1)
             }
-            FitRankerHomeView(uiState)
+            FitRankerHomeView(
+                uiState = uiState,
+                onAddTrainingClick = viewModel::showTrainingSheet
+            )
         }
     }
+}
 
+@Composable
+fun AddTrainingSheetContent() {
+    Text(text = "foo")
 }
 
 @Composable
@@ -65,7 +96,7 @@ fun FitRankerHomeView(
     uiState: HomeUiState,
 //    onRankingClick: () -> Unit,
 //    onHistoryClick: () -> Unit,
-//    onAddTrainingClick: () -> Unit
+    onAddTrainingClick: () -> Unit
 ) {
     val background = Color(0xFF07190A)
     Scaffold(
@@ -82,7 +113,7 @@ fun FitRankerHomeView(
         containerColor = background,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {},
+                onClick = onAddTrainingClick,
                 containerColor = Color(0xFF38FF14),
                 shape = CircleShape
             ) {
