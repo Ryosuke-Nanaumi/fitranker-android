@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
+import java.time.LocalDate
 
 data class TrainingUiModel(
     val name: String,
@@ -33,8 +33,8 @@ enum class Exercise(val label: String) {
 data class AddTrainingUiState(
     val weight: String = "",
     val reps: String = "",
-    val selectedExercise: Exercise = Exercise.BENCH_PRESS,
-    val date: Date = Date(),
+    val exercise: Exercise = Exercise.BENCH_PRESS,
+    val date: LocalDate = LocalDate.now(),
     val isShow: Boolean = false
 )
 
@@ -77,5 +77,11 @@ class HomeViewModel(private val repository: TrainingRepository = TrainingReposit
         _addTrainingUiState.update {
             it.copy(isShow = false)
         }
+    }
+    fun updateAddTraining(fnc: (AddTrainingUiState) -> AddTrainingUiState) {
+        _addTrainingUiState.update(fnc)
+    }
+    fun sheetSaveClicked() {
+        TODO("not implemented")
     }
 }

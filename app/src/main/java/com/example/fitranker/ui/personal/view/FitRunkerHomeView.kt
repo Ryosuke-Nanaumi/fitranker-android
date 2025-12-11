@@ -58,20 +58,37 @@ fun FitRankerApp(viewModel: HomeViewModel) {
         composable<Home> {
             val uiState by viewModel.uiState.collectAsState()
             val addState by viewModel.addTrainingUiState.collectAsState()
-            val showTrainingSheetState = rememberModalBottomSheetState()
+            val showTrainingSheetState = rememberModalBottomSheetState(
+                skipPartiallyExpanded = true
+            )
             val scope = rememberCoroutineScope()
 
             if (addState.isShow) {
                 ModalBottomSheet(
                     onDismissRequest = {
-                        scope.launch { showTrainingSheetState.hide() }.invokeOnCompletion{
+                        scope.launch { showTrainingSheetState.hide() }.invokeOnCompletion {
                             viewModel.hideTrainingSheet()
                         }
                     },
                     containerColor = Color(0xFF113616),
                     sheetState = showTrainingSheetState
                 ) {
-                    AddTrainingSheetContent()
+                    AddTrainingSheetContent(
+                        state = addState,
+                        onWeightChanged = { newWeight ->
+                            viewModel.updateAddTraining { it.copy(weight = newWeight) }
+                        },
+                        onRepsChanged = { newReps ->
+                            viewModel.updateAddTraining { it.copy(reps = newReps) }
+                        },
+                        onExerciseSelected = { newExercise ->
+                            viewModel.updateAddTraining { it.copy(exercise = newExercise) }
+                        },
+                        onDateSelected = { newDate ->
+                            viewModel.updateAddTraining { it.copy(date = newDate) }
+                        },
+                        onSaveClick = viewModel::sheetSaveClicked
+                    )
                 }
             }
 
@@ -84,11 +101,6 @@ fun FitRankerApp(viewModel: HomeViewModel) {
             )
         }
     }
-}
-
-@Composable
-fun AddTrainingSheetContent() {
-    Text(text = "foo")
 }
 
 @Composable
