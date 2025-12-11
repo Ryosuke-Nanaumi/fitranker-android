@@ -33,6 +33,14 @@ data class TrainingRecordRequest(
     val amount: Int,
 )
 
+data class TrainingRecordInfo(
+    val exerciseId: Int,
+    val date: String,
+    val amount: Int,
+    val point: Int,
+    val trainingId: Int,
+)
+
 @JsonClass(generateAdapter = true)
 data class TrainingRecordResponse(
     @param:Json(name = "createdId")
@@ -47,6 +55,11 @@ interface TrainingApi {
 
     @GET("api/ranking")
     suspend fun getRankingInfo(): List<RankingInfo>
+
+    @GET("api/training-records/{id}")
+    suspend fun getTrainingRecords(
+        @Path("id") id: Int
+    ): List<TrainingRecordInfo>
 
     @POST("api/training-records")
     suspend fun postTrainingRecord(

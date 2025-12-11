@@ -2,17 +2,24 @@ package com.example.fitranker.ui.personal.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fitranker.R
+import com.example.fitranker.data.remote.TrainingRecordInfo
 import com.example.fitranker.data.remote.TrainingRecordRequest
 import com.example.fitranker.data.repository.TrainingRepository
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.OffsetDateTime
 
-data class TrainingUiModel(
+data class TrainingRecord(
+    // 今はidは使わないかも
+    val id: Int,
+    val label: Int,
     val name: String,
-    val detail: String,
+    val amount: Int,
     val point: Int
 )
 
@@ -20,15 +27,16 @@ data class HomeUiState(
     val userName: String = "",
     val totalPoints: Int = 0,
     val todaysPoint: Int = 0,
-//    val trainings: List<TrainingUiModel> = emptyList(),
+    val trainings: List<TrainingRecord> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
 
-enum class Exercise(val id: Int, val label: String) {
-    BENCH_PRESS(id = 1, label = "ベンチプレス"),
-    SQUAT(id = 2, label = "スクワット"),
-    RUNNING(id = 3, label = "ランニング"),
+// TODO: ここに状態を持たせないようにする(dbに寄せる)
+enum class Exercise(val id: Int, val label: String, val resId: Int) {
+    BENCH_PRESS(id = 1, label = "ベンチプレス", resId = R.drawable.icon_kintore),
+    SQUAT(id = 2, label = "スクワット", resId = R.drawable.icon_kintore),
+    RUNNING(id = 3, label = "ランニング", resId = R.drawable.icon_warking),
 }
 
 data class AddTrainingUiState(
@@ -53,13 +61,20 @@ class HomeViewModel(private val repository: TrainingRepository = TrainingReposit
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-                val res = repository.getPersonalInfo(id)
+                val personalUserInfoDeferred = async { repository.getPersonalInfo(id) }
+                val recordsDeferred = async { repository.getTrainingRecords(id) }
+
+                val personalUserInfo = personalUserInfoDeferred.await()
+                val recordsInfo = recordsDeferred.await()
+
+                val records = generateTodaysTrainingRecords(recordsInfo)
 
                 _uiState.update {
                     it.copy(
-                        userName = res.name,
-                        totalPoints = res.totalPoint,
-                        todaysPoint = res.todaysPoint,
+                        userName = personalUserInfo.name,
+                        totalPoints = personalUserInfo.totalPoint,
+                        todaysPoint = personalUserInfo.todaysPoint,
+                        trainings = records,
                         isLoading = false
                     )
                 }
@@ -77,14 +92,17 @@ class HomeViewModel(private val repository: TrainingRepository = TrainingReposit
             it.copy(isShow = true)
         }
     }
+
     fun hideTrainingSheet() {
         _addTrainingUiState.update {
             it.copy(isShow = false)
         }
     }
+
     fun updateAddTraining(fnc: (AddTrainingUiState) -> AddTrainingUiState) {
         _addTrainingUiState.update(fnc)
     }
+
     fun sheetSaveClicked() {
         val current = _addTrainingUiState.value
 
@@ -114,5 +132,30 @@ class HomeViewModel(private val repository: TrainingRepository = TrainingReposit
                 }
             }
         }
+    }
+
+    private fun generateTodaysTrainingRecords(trainingRecordsInfo: List<TrainingRecordInfo>): List<TrainingRecord> {
+        val today = LocalDate.now()
+        return trainingRecordsInfo.filter { trainingRecordInfo ->
+            OffsetDateTime.parse(trainingRecordInfo.date).toLocalDate() == today
+        }.map { info ->
+            TrainingRecord(
+                id = info.trainingId,
+                label = generateTrainingIcon(info.exerciseId),
+                name = generateTrainingName(info.exerciseId),
+                amount = info.amount,
+                point = info.point
+            )
+        }
+    }
+
+    // 後からexerciseIdの渡し方考えた方が綺麗になるかも
+    // 今だと、DBとフロント両方に状態を持ってしまっている
+    private fun generateTrainingIcon(exerciseId: Int): Int {
+        return Exercise.entries.find { it.id == exerciseId }?.resId ?: R.drawable.icon_kintore
+    }
+
+    private fun generateTrainingName(exerciseId: Int): String {
+        return Exercise.entries.find { it.id == exerciseId }?.label ?: "不明"
     }
 }

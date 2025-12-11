@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -181,67 +182,62 @@ fun HomeHeader(
 
 @Composable
 fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier) {
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
-        ) {
-            PointCard(
-                title = "今日のポイント",
-                point = uiState.todaysPoint.toString(),
-                modifier = Modifier.weight(1f)
-            )
-            PointCard(
-                title = "累計ポイント",
-                point = uiState.totalPoints.toString(),
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Column {
-            Text(
-                text = "今日のトレーニング",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+        item {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(15.dp)
             ) {
-                TrainingItemCard(
-                    icon = R.drawable.icon_kintore,
-                    title = "ベンチプレス - 3 x 10回",
-                    point = 50
+                PointCard(
+                    title = "今日のポイント",
+                    point = uiState.todaysPoint.toString(),
+                    modifier = Modifier.weight(1f)
                 )
-                TrainingItemCard(
-                    icon = R.drawable.icon_kintore,
-                    title = "スクワット - 3 x 12回",
-                    point = 60
-                )
-                TrainingItemCard(
-                    icon = R.drawable.icon_warking,
-                    title = "ランニング - 20分",
-                    point = 40
+                PointCard(
+                    title = "累計ポイント",
+                    point = uiState.totalPoints.toString(),
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
-        ) {
-            HomeButton(
-                icon = R.drawable.icon_ranking,
-                title = "ランキングを見る",
-                modifier = Modifier.weight(1f)
-            )
-            HomeButton(
-                icon = R.drawable.icon_history,
-                title = "トレーニング履歴",
-                modifier = Modifier.weight(1f)
-            )
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "今日のトレーニング",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+                uiState.trainings.forEach { training ->
+                    TrainingItemCard(
+                        icon = training.label,
+                        title = "${training.name}: ${training.amount}回",
+                        point = training.point
+                    )
+                }
+            }
+        }
+
+        item {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                HomeButton(
+                    icon = R.drawable.icon_ranking,
+                    title = "ランキングを見る",
+                    modifier = Modifier.weight(1f)
+                )
+                HomeButton(
+                    icon = R.drawable.icon_history,
+                    title = "トレーニング履歴",
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
 }
