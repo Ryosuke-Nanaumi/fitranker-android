@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -42,7 +44,6 @@ import com.example.fitranker.R
 import com.example.fitranker.ui.navigation.Home
 import com.example.fitranker.ui.personal.viewModel.HomeUiState
 import com.example.fitranker.ui.personal.viewModel.HomeViewModel
-import kotlinx.serialization.Serializable
 
 @Composable
 fun FitRankerApp(viewModel: HomeViewModel) {
@@ -79,6 +80,18 @@ fun FitRankerHomeView(
             )
         },
         containerColor = background,
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {},
+                containerColor = Color(0xFF38FF14),
+                shape = CircleShape
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add training"
+                )
+            }
+        },
     ) { innerPadding ->
         HomeContent(uiState = uiState, modifier = Modifier.padding(innerPadding))
     }
@@ -134,8 +147,16 @@ fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            PointCard(title = "今日のポイント", point = uiState.todaysPoint.toString(), modifier = Modifier.weight(1f))
-            PointCard(title = "累計ポイント", point = uiState.totalPoints.toString(), modifier = Modifier.weight(1f))
+            PointCard(
+                title = "今日のポイント",
+                point = uiState.todaysPoint.toString(),
+                modifier = Modifier.weight(1f)
+            )
+            PointCard(
+                title = "累計ポイント",
+                point = uiState.totalPoints.toString(),
+                modifier = Modifier.weight(1f)
+            )
         }
         Column {
             Text(
