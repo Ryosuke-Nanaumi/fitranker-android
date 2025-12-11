@@ -112,7 +112,10 @@ fun FitRankerRoute() {
         composable<History> { entry ->
             val args = entry.toRoute<History>()
             HistoryRoute(
-                userId = args.userId
+                userId = args.userId,
+                onBack = {
+                        navController.popBackStack()
+                }
             )
         }
     }
@@ -160,9 +163,14 @@ fun FitRankerHomeView(
             }
         },
     ) { innerPadding ->
-        HomeContent(uiState = uiState, modifier = Modifier.padding(innerPadding), onHistoryClick = onHistoryClick)
+        HomeContent(
+            uiState = uiState,
+            modifier = Modifier.padding(innerPadding),
+            onHistoryClick = onHistoryClick
+        )
     }
 }
+
 @Composable
 fun LoadingIndicator() {
     Box(
@@ -353,13 +361,18 @@ fun TrainingItemCard(@DrawableRes icon: Int, title: String, point: Int) {
 }
 
 @Composable
-fun HomeButton(@DrawableRes icon: Int, title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun HomeButton(
+    @DrawableRes icon: Int,
+    title: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Column(
         modifier = modifier
             .height(140.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(color = Color(0xFF132815))
-            .clickable{ onClick() }
+            .clickable { onClick() }
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
