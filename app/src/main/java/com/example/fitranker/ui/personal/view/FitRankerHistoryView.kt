@@ -150,7 +150,7 @@ fun TrainingItemHistoryCard(
 
             Column {
                 Text(
-                    text = record.name,
+                    text = "${record.name}: ${record.amount}回",
                     color = Color.White,
                     fontSize = 20.sp,
                 )
@@ -162,21 +162,23 @@ fun TrainingItemHistoryCard(
                 )
             }
 
+        }
+        Column {
+            Text(
+                text = "+${record.point} pt",
+                color = Color(0xFF38FF14),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "削除",
-                tint = Color.Red,
+                tint = Color(0xFFCC4444),
                 modifier = Modifier
                     .size(24.dp)
                     .clickable { onDeleteClick(record.id) }
             )
         }
-
-        Text(
-            text = "+${record.point} pt",
-            color = Color(0xFF38FF14),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
     }
 }
