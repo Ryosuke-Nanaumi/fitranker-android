@@ -6,6 +6,7 @@ import com.example.fitranker.R
 import com.example.fitranker.data.remote.TrainingRecordInfo
 import com.example.fitranker.data.remote.TrainingRecordRequest
 import com.example.fitranker.data.repository.TrainingRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.OffsetDateTime
+import javax.inject.Inject
 
 data class TrainingRecord(
     // 今はidは使わないかも
@@ -48,7 +50,8 @@ data class AddTrainingUiState(
     val errorMessage: String? = null
 )
 
-class HomeViewModel(private val repository: TrainingRepository = TrainingRepository()) :
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val repository: TrainingRepository) :
     ViewModel() {
     private var _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = _uiState

@@ -7,9 +7,10 @@ import com.example.fitranker.data.remote.RankingInfo
 import com.example.fitranker.data.remote.TrainingApi
 import com.example.fitranker.data.remote.TrainingRecordInfo
 import com.example.fitranker.data.remote.TrainingRecordRequest
+import javax.inject.Inject
 
-class TrainingRepository(
-    private val api: TrainingApi = ApiClient.create(TrainingApi::class.java)
+class TrainingRepository @Inject constructor(
+    private val api: TrainingApi
 ) {
     suspend fun getPersonalInfo(userId: Int): PersonalUserInfo {
         return api.getPersonalInfo(userId)

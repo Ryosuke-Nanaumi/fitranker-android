@@ -43,9 +43,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.fitranker.R
 import com.example.fitranker.ui.navigation.History
 import com.example.fitranker.ui.navigation.Home
@@ -55,10 +57,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FitRankerApp(viewModel: HomeViewModel) {
+fun FitRankerRoute() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Home) {
         composable<Home> {
+            val viewModel: HomeViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
             val addState by viewModel.addTrainingUiState.collectAsState()
             val showTrainingSheetState = rememberModalBottomSheetState(
@@ -102,12 +105,15 @@ fun FitRankerApp(viewModel: HomeViewModel) {
                 uiState = uiState,
                 onAddTrainingClick = viewModel::showTrainingSheet,
                 onHistoryClick = {
-                    navController.navigate(History)
+                    navController.navigate(History(userId = 1))
                 }
             )
         }
-        composable<History> {
-            FitRankerHistoryView()
+        composable<History> { entry ->
+            val args = entry.toRoute<History>()
+            HistoryRoute(
+                userId = args.userId
+            )
         }
     }
 }

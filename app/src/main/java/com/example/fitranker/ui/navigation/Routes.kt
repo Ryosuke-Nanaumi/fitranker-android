@@ -9,7 +9,7 @@ object Home
 object Ranking
 
 @Serializable
-object History
+data class History(val userId: Int)
 
 @Serializable
 object AddTraining

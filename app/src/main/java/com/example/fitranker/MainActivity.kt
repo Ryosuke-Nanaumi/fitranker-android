@@ -5,16 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import com.example.fitranker.ui.personal.view.FitRankerApp
-import com.example.fitranker.ui.personal.view.FitRankerHomeView
-import com.example.fitranker.ui.personal.viewModel.HomeViewModel
+import com.example.fitranker.ui.personal.view.FitRankerRoute
 import com.example.fitranker.ui.theme.FitRankerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val homeViewModel: HomeViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bg = Color(0xFF07190A)
@@ -25,7 +23,7 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             FitRankerTheme {
-                FitRankerApp(viewModel = homeViewModel)
+                FitRankerRoute()
             }
         }
     }
