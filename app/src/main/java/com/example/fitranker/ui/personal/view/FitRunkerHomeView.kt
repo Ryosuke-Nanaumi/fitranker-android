@@ -143,7 +143,7 @@ fun FitRankerHomeView(
             .fillMaxSize(),
         topBar = {
             HomeHeader(
-                userName = "foo",
+                userName = uiState.userName,
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding(),
@@ -260,7 +260,9 @@ fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier, onHistoryCl
             }
         }
         item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
                     text = "今日のトレーニング(直近5件)",
                     color = Color.White,
@@ -268,12 +270,22 @@ fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier, onHistoryCl
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 10.dp)
                 )
-                uiState.trainings.take(5).forEach { training ->
-                    TrainingItemCard(
-                        icon = training.label,
-                        title = "${training.name}: ${training.amount}回",
-                        point = training.point
+                if (uiState.trainings.isEmpty()) {
+                    Text(
+                        text = "今日のトレーニング履歴はありません",
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
+                } else {
+                    uiState.trainings.take(5).forEach { training ->
+                        TrainingItemCard(
+                            icon = training.label,
+                            title = "${training.name}: ${training.amount}回",
+                            point = training.point
+                        )
+                    }
                 }
             }
         }
