@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -77,4 +78,9 @@ dependencies {
 
     // JSON serialization library, works with the Kotlin serialization plugin.
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    // hilt
+    implementation("com.google.dagger:hilt-android:2.51")
+    kapt("com.google.dagger:hilt-compiler:2.51")
+
 }
