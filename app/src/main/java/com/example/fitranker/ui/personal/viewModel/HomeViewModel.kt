@@ -2,6 +2,7 @@ package com.example.fitranker.ui.personal.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fitranker.data.remote.TrainingRecordRequest
 import com.example.fitranker.data.repository.TrainingRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,10 +25,10 @@ data class HomeUiState(
     val errorMessage: String? = null
 )
 
-enum class Exercise(val label: String) {
-    BENCH_PRESS("ベンチプレス"),
-    SQUAT("スクワット"),
-    RUNNING("ランニング"),
+enum class Exercise(val id: Int, val label: String) {
+    BENCH_PRESS(id = 1, label = "ベンチプレス"),
+    SQUAT(id = 2, label = "スクワット"),
+    RUNNING(id = 3, label = "ランニング"),
 }
 
 data class AddTrainingUiState(
@@ -35,7 +36,8 @@ data class AddTrainingUiState(
     val reps: String = "",
     val exercise: Exercise = Exercise.BENCH_PRESS,
     val date: LocalDate = LocalDate.now(),
-    val isShow: Boolean = false
+    val isShow: Boolean = false,
+    val errorMessage: String? = null
 )
 
 class HomeViewModel(private val repository: TrainingRepository = TrainingRepository()) :
@@ -44,8 +46,10 @@ class HomeViewModel(private val repository: TrainingRepository = TrainingReposit
     val uiState: StateFlow<HomeUiState> = _uiState
     private var _addTrainingUiState = MutableStateFlow(AddTrainingUiState())
     val addTrainingUiState: StateFlow<AddTrainingUiState> = _addTrainingUiState
+    private var userId: Int? = null
 
     fun load(id: Int) {
+        userId = id
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
@@ -82,6 +86,33 @@ class HomeViewModel(private val repository: TrainingRepository = TrainingReposit
         _addTrainingUiState.update(fnc)
     }
     fun sheetSaveClicked() {
-        TODO("not implemented")
+        val current = _addTrainingUiState.value
+
+        val weightInt = current.weight.toIntOrNull()
+        val repsInt = current.reps.toIntOrNull()
+
+        if (weightInt == null || repsInt == null) {
+            _addTrainingUiState.update { it.copy(errorMessage = "入力された値が不正です") }
+            return
+        }
+
+        val uid = userId ?: return
+        val input = TrainingRecordRequest(
+            userId = uid,
+            exerciseId = current.exercise.id,
+            date = current.date.toString(),
+            amount = repsInt, // TODO ランニングにも対応させる, weightつける
+        )
+        viewModelScope.launch {
+            try {
+                repository.postTrainingRecord(input)
+                hideTrainingSheet()
+                load(uid)
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(errorMessage = "トレーニング記録の保存に失敗しました: $e")
+                }
+            }
+        }
     }
 }

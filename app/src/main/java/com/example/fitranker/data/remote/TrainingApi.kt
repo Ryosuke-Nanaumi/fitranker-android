@@ -1,6 +1,7 @@
 package com.example.fitranker.data.remote
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -23,16 +24,18 @@ data class RankingInfo(
     val point: Int,
 )
 
-//@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = true)
 data class TrainingRecordRequest(
+    @param:Json(name = "userId")
     val userId: Int,
     val exerciseId: Int,
     val date: String,
     val amount: Int,
 )
 
-//@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = true)
 data class TrainingRecordResponse(
+    @param:Json(name = "createdId")
     val id: Int
 )
 
@@ -45,7 +48,7 @@ interface TrainingApi {
     @GET("api/ranking")
     suspend fun getRankingInfo(): List<RankingInfo>
 
-    @POST("api/training_records")
+    @POST("api/training-records")
     suspend fun postTrainingRecord(
         @Body body: TrainingRecordRequest
     ): TrainingRecordResponse
