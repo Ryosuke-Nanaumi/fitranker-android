@@ -3,6 +3,7 @@ package com.example.fitranker.ui.personal.view
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.fitranker.R
+import com.example.fitranker.ui.navigation.History
 import com.example.fitranker.ui.navigation.Home
 import com.example.fitranker.ui.personal.viewModel.HomeUiState
 import com.example.fitranker.ui.personal.viewModel.HomeViewModel
@@ -98,8 +100,14 @@ fun FitRankerApp(viewModel: HomeViewModel) {
             }
             FitRankerHomeView(
                 uiState = uiState,
-                onAddTrainingClick = viewModel::showTrainingSheet
+                onAddTrainingClick = viewModel::showTrainingSheet,
+                onHistoryClick = {
+                    navController.navigate(History)
+                }
             )
+        }
+        composable<History> {
+            FitRankerHistoryView()
         }
     }
 }
@@ -108,9 +116,18 @@ fun FitRankerApp(viewModel: HomeViewModel) {
 fun FitRankerHomeView(
     uiState: HomeUiState,
 //    onRankingClick: () -> Unit,
-//    onHistoryClick: () -> Unit,
+    onHistoryClick: () -> Unit,
     onAddTrainingClick: () -> Unit
 ) {
+    if (uiState.isLoading) {
+        LoadingIndicator()
+        return
+    }
+
+    uiState.errorMessage?.let { error ->
+        ErrorView(errorMessage = error)
+        return
+    }
     val background = Color(0xFF07190A)
     Scaffold(
         modifier = Modifier
@@ -137,7 +154,31 @@ fun FitRankerHomeView(
             }
         },
     ) { innerPadding ->
-        HomeContent(uiState = uiState, modifier = Modifier.padding(innerPadding))
+        HomeContent(uiState = uiState, modifier = Modifier.padding(innerPadding), onHistoryClick = onHistoryClick)
+    }
+}
+@Composable
+fun LoadingIndicator() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF07190A)),
+        contentAlignment = Alignment.Center
+    ) {
+        androidx.compose.material3.CircularProgressIndicator(
+            color = Color(0xFF38FF14),
+            strokeWidth = 5.dp
+        )
+    }
+}
+
+@Composable
+fun ErrorView(errorMessage: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(errorMessage, color = Color.Red)
     }
 }
 
@@ -181,7 +222,7 @@ fun HomeHeader(
 }
 
 @Composable
-fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier) {
+fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier, onHistoryClick: () -> Unit) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
@@ -230,12 +271,14 @@ fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier) {
                 HomeButton(
                     icon = R.drawable.icon_ranking,
                     title = "ランキングを見る",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    onClick = onHistoryClick
                 )
                 HomeButton(
                     icon = R.drawable.icon_history,
                     title = "トレーニング履歴",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    onClick = onHistoryClick
                 )
             }
         }
@@ -304,12 +347,13 @@ fun TrainingItemCard(@DrawableRes icon: Int, title: String, point: Int) {
 }
 
 @Composable
-fun HomeButton(@DrawableRes icon: Int, title: String, modifier: Modifier = Modifier) {
+fun HomeButton(@DrawableRes icon: Int, title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
         modifier = modifier
             .height(140.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(color = Color(0xFF132815))
+            .clickable{ onClick() }
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
