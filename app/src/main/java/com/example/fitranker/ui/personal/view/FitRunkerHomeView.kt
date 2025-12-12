@@ -49,8 +49,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.fitranker.R
+import com.example.fitranker.ui.login.LoginView
+import com.example.fitranker.ui.login.LoginViewModel
 import com.example.fitranker.ui.navigation.History
 import com.example.fitranker.ui.navigation.Home
+import com.example.fitranker.ui.navigation.Login
 import com.example.fitranker.ui.personal.viewModel.HomeUiState
 import com.example.fitranker.ui.personal.viewModel.HomeViewModel
 import kotlinx.coroutines.launch
@@ -59,7 +62,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun FitRankerRoute() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Home) {
+    NavHost(navController = navController, startDestination = Login) {
+        composable<Login> {
+            val viewModel: LoginViewModel = hiltViewModel()
+            LoginView(
+                onLoginSuccess = { navController.navigate(Home) },
+                viewModel = viewModel
+            )
+        }
         composable<Home> {
             val viewModel: HomeViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
@@ -114,7 +124,7 @@ fun FitRankerRoute() {
             HistoryRoute(
                 userId = args.userId,
                 onBack = {
-                        navController.popBackStack()
+                    navController.popBackStack()
                 }
             )
         }

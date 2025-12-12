@@ -84,4 +84,10 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.51")
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
 
+    // firebase auth
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth")
+
+    // datastore
+    implementation("androidx.datastore:datastore-preferences:1.2.0")
 }

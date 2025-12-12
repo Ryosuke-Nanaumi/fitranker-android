@@ -12,4 +12,4 @@ object Ranking
 data class History(val userId: Int)
 
 @Serializable
-object AddTraining
+object Login

@@ -8,16 +8,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object ApiClient {
-    private val moshi: Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-    val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+    fun createRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        val moshi = Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
 
-    private val okHttpClient: OkHttpClient = OkHttpClient.Builder().addInterceptor(logging).build()
-
-    private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8080/")
-        .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .build()
-
-    fun <T> create(service: Class<T>): T = retrofit.create(service)
+        return Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8080/")
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
 }
