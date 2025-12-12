@@ -51,6 +51,7 @@ import androidx.navigation.toRoute
 import com.example.fitranker.R
 import com.example.fitranker.ui.navigation.History
 import com.example.fitranker.ui.navigation.Home
+import com.example.fitranker.ui.navigation.Ranking
 import com.example.fitranker.ui.personal.viewModel.HomeUiState
 import com.example.fitranker.ui.personal.viewModel.HomeViewModel
 import kotlinx.coroutines.launch
@@ -104,8 +105,18 @@ fun FitRankerRoute() {
             FitRankerHomeView(
                 uiState = uiState,
                 onAddTrainingClick = viewModel::showTrainingSheet,
+                onRankingClick = {
+                    navController.navigate(Ranking)
+                },
                 onHistoryClick = {
                     navController.navigate(History(userId = 1))
+                }
+            )
+        }
+        composable<Ranking> {
+            RankingRoute(
+                onBack = {
+            navController.popBackStack()
                 }
             )
         }
@@ -114,7 +125,7 @@ fun FitRankerRoute() {
             HistoryRoute(
                 userId = args.userId,
                 onBack = {
-                        navController.popBackStack()
+                    navController.popBackStack()
                 }
             )
         }
@@ -124,7 +135,7 @@ fun FitRankerRoute() {
 @Composable
 fun FitRankerHomeView(
     uiState: HomeUiState,
-//    onRankingClick: () -> Unit,
+    onRankingClick: () -> Unit,
     onHistoryClick: () -> Unit,
     onAddTrainingClick: () -> Unit
 ) {
@@ -166,6 +177,7 @@ fun FitRankerHomeView(
         HomeContent(
             uiState = uiState,
             modifier = Modifier.padding(innerPadding),
+            onRankingClick = onRankingClick,
             onHistoryClick = onHistoryClick
         )
     }
@@ -236,7 +248,12 @@ fun HomeHeader(
 }
 
 @Composable
-fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier, onHistoryClick: () -> Unit) {
+fun HomeContent(
+    uiState: HomeUiState,
+    modifier: Modifier = Modifier,
+    onRankingClick: () -> Unit,
+    onHistoryClick: () -> Unit,
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
@@ -298,7 +315,7 @@ fun HomeContent(uiState: HomeUiState, modifier: Modifier = Modifier, onHistoryCl
                     icon = R.drawable.icon_ranking,
                     title = "ランキングを見る",
                     modifier = Modifier.weight(1f),
-                    onClick = onHistoryClick
+                    onClick = onRankingClick
                 )
                 HomeButton(
                     icon = R.drawable.icon_history,
