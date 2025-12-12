@@ -52,7 +52,7 @@ CREATE DATABASE fitranker;
 meke migrate-up
 ```
 
-## 💡 4. 今後の展望
+## 💡 5. 今後の展望
 
 - ログイン機能の追加
     - ユーザーごとにポイントを競い合う機能の実装
